@@ -1,14 +1,12 @@
 /// CLASSES
 
+/// COMBAT 
 class Combat {
 
     async start(){
+        addLog('Started combat')
         let sp = [[[3,0],[1,1],[5,1]],[[3,6],[1,5],[5,5]]];
-        this.players.forEach((pl, idx)=>{
-            pl.dice.forEach((d, ind)=>{
-                new Dice(pl, d, sp[idx][ind][0], sp[idx][ind][1]);
-            })
-        })
+        this.players.forEach((pl, idx)=> pl.dice.forEach((d, ind)=> new Dice(pl, d, sp[idx][ind][0], sp[idx][ind][1])));
         // await sleep(2000);
         this.loadingsceen.remove();
         await sleep(2000);
@@ -17,9 +15,7 @@ class Combat {
 
     async nextRound(){
         await sleep(1000);
-        for( let i = this.pl2.fieldDice.length; i > 0; i-- ){
-            this.pl2.fieldDice[i - 1].use();
-        }
+        for( let i = this.pl2.fieldDice.length; i > 0; i-- ) this.pl2.fieldDice[i - 1].use();
     }
     
     constructor (pl1, pl2){
@@ -30,19 +26,19 @@ class Combat {
         this.seed = newSeed();
         this.scene = newElm('div', 'scene', body);
         this.sea = newElm('div', 'sea', this.scene);
-        this.tiles = []
-        this.tilesArr = []
+        this.tiles = [];
+        this.tilesArr = [];
         for(let y = 0; y < 7; y++){
-            this.tilesArr.push([])
+            this.tilesArr.push([]);
             for(let x = 0; x < 7; x++){
-                let tile = new Tile(x, y)
+                let tile = new Tile(x, y);
                 this.tilesArr[y].push(tile);
                 this.tiles.push(tile);
             }
         }
         this.tiles.forEach(t=>t.setBuren(t.x, t.y));
         this.players = [pl2, pl1];
-        this.start()
+        this.start();
     }
 }
 
@@ -128,6 +124,7 @@ class Dice {
         this.waverotate += 360;
         this.value = Math.floor(Math.random() * 6 );
         this.dice.setAttribute('data-roll', this.value);
+        addLog(this.player.cl + ' rolled to ' + this.container.getAttribute('data-x') +', '+ this.container.getAttribute('data-y'))
         return new Promise (async r=>{
             await sleep(1000);
             this.faces[this.value].forEach(async (p, ind)=>{

@@ -186,3 +186,8 @@ const highlightPip = async (e)=>{
     await sleep(200);
     e.classList.remove('highlight')
 }
+
+/// ADD LOG
+const addLog = (val)=>{
+    document.querySelector('#logs').innerHTML += `<li>${val}</li>`
+}

@@ -1,6 +1,6 @@
 @font-face { font-family: origram; src: url(origames.ttf); }
 
-:root { --theme: #002233; --color-red: #bf3610; --dice-size: calc(100vw / 12); }
+:root { --theme: #023; --color-red: #bf3610; --dice-size: calc(100vw / 12); }
 /* / OVERALL */
 * { padding: 0; margin:0; box-sizing: border-box; user-select: none; }
 /* / HTML */
@@ -18,6 +18,10 @@ path { filter: url(#a) }
 
 /* / LOADING SCREEN */
 .loadingscreen { position: fixed; width: 100%; height: 100%; background-color: red; z-index: 1; }
+
+/* / LOGS */
+#logs { z-index: 10; position: fixed; right: 0; bottom: 0; padding: 1vh; border: 1px solid #000; background-color: #0003; width: 100%; max-height: 10vh; overflow-y: scroll; }
+#logs li { margin-left: 2vh; list-style: square; font-size: 1vh; }
 
 /* / FPS COUNTER / SEED */
 .fps { position: fixed; font-size: 1vh; left: 1vh; top: 1vh; opacity: .5; }
@@ -41,7 +45,7 @@ path { filter: url(#a) }
 .tile.roll-option::after { box-shadow: inset 0 0 2vh #fff;  opacity: 0.5; }
 .tile.hover.roll-option::after { opacity: 1; scale: 1.5; }
 
-.tile.occupied::before { box-sizing: border-box; content: ""; position: absolute; left: 50%; top: 0; width: 90%; height: 1vh; transform: translate(-50%); box-shadow: inset 0 0 .5vh green; opacity: 0.5; transition: .1s ease-out; z-index: 1; }
+.tile.occupied::before { box-sizing: border-box; content: ""; position: absolute; left: 50%; bottom: 0; width: 90%; height: 1vh; transform: translate(-50%); box-shadow: inset 0 0 .5vh green; opacity: 1; transition: .1s ease-out; z-index: 1; }
 
 /* / DICE CONTAINER */
 .dice-container { width: calc(100% / 7); aspect-ratio: 1/1; position: absolute; transition: 1s ease; transform-style: preserve-3d; }
@@ -84,7 +88,7 @@ path { filter: url(#a) }
 .dice[data-roll="5"] { transform: rotateX(0deg) rotateY(180deg); }
 
 .dice .face { position: absolute; width: 100%; height: 100%; display: grid; grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr 1fr 1fr; padding: calc(var(--dice-size) / 5); place-items: center; }
-.en .dice .face > svg .color1 { fill: rgb(147, 8, 4); }
+.en .dice .face > svg .color1 { fill: rgb(102, 8, 5); }
 .en .dice .face > svg .color2 { fill: rgb(173, 146, 10); }
 .dice .face > svg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; z-index: -1; }
 .dice .face .pip { width: 100%; height: 100%; pointer-events: none; transition: .15s ease-in; position: relative; display: flex; justify-content: center; align-items: center; }
