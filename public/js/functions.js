@@ -10,6 +10,36 @@ let combat;
 /// LOG
 const log = (val)=>{ console.log(val); }
 
+/// SOCKET.IO
+const socket = io();
+let roomname = null;
+let ss = null;
+const join = () => { 
+    socket.emit('unjoin'); 
+    socket.emit('join_server', 'My Username'); 
+    ss = newElm('div', 'searching', body)
+    let loadingTxt = newElm('div', 'flex', ss)
+    'Searching for booty...'.split('').forEach((l, i)=>loadingTxt.innerHTML += `<p style="animation-delay: ${100 * i}ms;">${l}</p>`);
+    let cancelJoin = newElm ('button', '', ss);
+    cancelJoin.innerText = 'Cancel'
+    cancelJoin.addEventListener('click', unjoin)
+}
+const unjoin = () => {
+    socket.emit('unjoin');
+    ss.remove();
+}
+const sendmsg = () => socket.emit('message', roomname, 'hi player');
+socket.on('found', (rn)=>{
+    ss.innerHTML = 'Pirates located!!!'
+    roomname = rn;
+    console.log('Found a player: ' + rn);
+    socket.emit('join_room', rn)
+})
+socket.on('msg', (msg)=>{
+    console.log(msg);
+})
+
+
 /// DRAG ELEMENTS
 function dragElement(el) {
     let sx = 0, sy = 0, tsx = 0, tsy = 0, tpx = 0, tpy = 0, lasso = undefined, d = 0;
@@ -45,7 +75,6 @@ function dragElement(el) {
     }
     function dragTouch(e){
         selectAll('.tile').forEach(ti=>ti.classList.remove('roll-option', 'valid-target', 'invalid-target'))
-        // lasso = newElm('div', 'lasso', el);
         el.classList.add('dragging');
         tsx = e.targetTouches[0].pageX;
         tsy = e.targetTouches[0].pageY;
@@ -77,7 +106,6 @@ function dragElement(el) {
         let a = angle(tsx, tsy, tpx, tpy);
         el.style.rotate = a + 'deg'
         d = distance(tsx, tsy, tpx, tpy);
-        // lasso.style.height = d - (2.5 * vh) + 'px';
         getHoverTarget('tile');
     }
     function elementDrag(e){
@@ -86,11 +114,9 @@ function dragElement(el) {
         let a = angle(tsx, tsy, tpx, tpy);
         el.style.rotate = a + 'deg'
         d = distance(tsx, tsy, tpx, tpy);
-        // lasso.style.height = d - (2.5 * vh) + 'px'
         getHoverTarget('tile');
     }
     async function closeDragElement(e){
-        // lasso.remove();
         document.onmouseup = null;
         document.ontouchend = null;
         document.onmousemove = null;
@@ -102,15 +128,16 @@ function dragElement(el) {
         target.classList.remove('hover')
         if(target) {
             
-            if(!target.dice&&target.classList.contains('roll-option')){
-                target.classList.add('occupied')
-                el.obj.tile.classList.remove('occupied')
-                select(`.tile.x${el.getAttribute('data-x')}.y${el.getAttribute('data-y')}`).dice = null;
+            if(true){
+            // if(!target.dice&&target.classList.contains('roll-option')){
+                // target.classList.add('occupied')
+                // el.obj.tile.classList.remove('occupied')
+                // select(`.tile.x${el.getAttribute('data-x')}.y${el.getAttribute('data-y')}`).dice = null;
                 el.setAttribute('data-x',target.x);
                 el.setAttribute('data-y',target.y);
                 el.obj.roll();
-                target.dice = el
-                el.obj.tile = target;
+                // target.dice = el
+                // el.obj.tile = target;
             } else if (target.classList.contains('valid-target')){
                 el.obj.use(target.dice, tpx, tpy, d)
             }

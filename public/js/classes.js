@@ -1,11 +1,36 @@
 /// CLASSES
 
+const currentWater = [
+    [0,0],
+    [1,0],
+    [2,0],
+    [3,0],
+    [4,0],
+    [5,0],
+    [6,0],
+    [0,1],
+    [5,1],
+    [0,2],
+    [6,2],
+    [0,6],
+    [6,6],
+    [0,7],
+    [5,7],
+    [0,8],
+    [1,8],
+    [2,8],
+    [3,8],
+    [4,8],
+    [5,8],
+    [6,8],
+]
+
 /// COMBAT 
 class Combat {
 
     async start(){
         addLog('Started combat')
-        let sp = [[[3,0],[1,1],[5,1]],[[3,6],[1,5],[5,5]]];
+        let sp = [[[2,3],[3,3],[4,4]],[[3,5],[2,5],[2,4]]];
         this.players.forEach((pl, idx)=> pl.dice.forEach((d, ind)=> new Dice(pl, d, sp[idx][ind][0], sp[idx][ind][1])));
         // await sleep(2000);
         this.loadingsceen.remove();
@@ -28,9 +53,9 @@ class Combat {
         this.sea = newElm('div', 'sea', this.scene);
         this.tiles = [];
         this.tilesArr = [];
-        for(let y = 0; y < 7; y++){
+        for(let y = 0; y < 9; y++){
             this.tilesArr.push([]);
-            for(let x = 0; x < 7; x++){
+            for(let x = 0; x < 6 + ((y + 1) % 2); x++){
                 let tile = new Tile(x, y);
                 this.tilesArr[y].push(tile);
                 this.tiles.push(tile);
@@ -45,6 +70,8 @@ class Combat {
 class Tile {
     constructor(x,y){
         this.e = newElm('div', `tile x${x} y${y}`, combat.sea)
+        this.e.innerHTML = `<p>${x}, ${y}</p>`
+        if (currentWater.filter(w => (w[0] == x && w[1] == y)).length) this.e .classList.add('nvt');
         this.x = x;
         this.y = y;
         this.e.x = x;
@@ -54,10 +81,10 @@ class Tile {
         this.e.onclick = ()=> combat.tiles.forEach(t=>t.resetClass());
     }
     setBuren(x, y){
-        if(y > 0) this.buren[0] = combat.tilesArr[y - 1][x];
-        if(x < 6) this.buren[1] = combat.tilesArr[y][x + 1];
-        if(y < 6) this.buren[2] = combat.tilesArr[y + 1][x];
-        if(x > 0) this.buren[3] = combat.tilesArr[y][x - 1];
+        // if(y > 0) this.buren[0] = combat.tilesArr[y - 1][x];
+        // if(x < 6) this.buren[1] = combat.tilesArr[y][x + 1];
+        // if(y < 6) this.buren[2] = combat.tilesArr[y + 1][x];
+        // if(x > 0) this.buren[3] = combat.tilesArr[y][x - 1];
     }
     resetClass(){
         this.e.classList.remove('roll-option', 'valid-target', 'invalid-target')
@@ -93,9 +120,9 @@ class Dice {
         this.container = newElm('div', 'dice-container ' + player.cl, combat.sea);
         this.container.setAttribute('data-x' ,x);
         this.container.setAttribute('data-y', y);
-        this.tile = select(`.tile.x${x}.y${y}`);
-        this.tile.classList.add("occupied")
-        this.tile.dice = this;
+        // this.tile = select(`.tile.x${x}.y${y}`);
+        // this.tile.classList.add("occupied")
+        // this.tile.dice = this;
         this.wave = newElm('div', 'wave', this.container);
         this.wave.style = `animation-delay: -${Math.floor(Math.random() * 60)}s`
         this.dice = newElm('div', 'dice', this.wave);
