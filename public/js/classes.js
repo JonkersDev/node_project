@@ -32,7 +32,6 @@ class Combat {
         addLog('Started combat')
         let sp = [[[2,3],[3,3],[4,4]],[[3,5],[2,5],[2,4]]];
         this.players.forEach((pl, idx)=> pl.dice.forEach((d, ind)=> new Dice(pl, d, sp[idx][ind][0], sp[idx][ind][1])));
-        // await sleep(2000);
         this.loadingsceen.remove();
         await sleep(2000);
         this.players.forEach(pl=>pl.diceObjects.forEach(d=>d.roll()))
@@ -76,15 +75,24 @@ class Tile {
         this.y = y;
         this.e.x = x;
         this.e.y = y;
-        this.buren = [0,0,0,0]
+        this.buren = [0,0,0,0,0,0]
 
         this.e.onclick = ()=> combat.tiles.forEach(t=>t.resetClass());
+        this.e.onclick = ()=> {
+            selectAll('.tile').forEach(t=>t.style.background = '')
+            this.buren.forEach(b=> {if(b.e) b.e.style.background = 'white'})
+        };
     }
     setBuren(x, y){
-        // if(y > 0) this.buren[0] = combat.tilesArr[y - 1][x];
-        // if(x < 6) this.buren[1] = combat.tilesArr[y][x + 1];
-        // if(y < 6) this.buren[2] = combat.tilesArr[y + 1][x];
-        // if(x > 0) this.buren[3] = combat.tilesArr[y][x - 1];
+        this.offset = 0
+        if( y % 2 == 0 ) this.offset = -1
+
+        if( y > 0 && x + this.offset >= 0 ) this.buren[0] = combat.tilesArr[y - 1][x + this.offset];
+        if( y > 0 && x < 6 ) this.buren[1] = combat.tilesArr[y - 1][x + 1 + this.offset];
+        if( x + this.offset <= 4 ) this.buren[2] = combat.tilesArr[y][x + 1];
+        if( y < 8  && x < 6 ) this.buren[3] = combat.tilesArr[y + 1][x + 1 + this.offset];
+        if( y < 8  && x + this.offset >= 0 ) this.buren[4] = combat.tilesArr[y + 1][x + this.offset];
+        if( x > 0 ) this.buren[5] = combat.tilesArr[y][x - 1];
     }
     resetClass(){
         this.e.classList.remove('roll-option', 'valid-target', 'invalid-target')
